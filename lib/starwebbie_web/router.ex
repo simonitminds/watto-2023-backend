@@ -9,14 +9,12 @@ defmodule StarwebbieWeb.Router do
     pipe_through :api
   end
 
-  forward "/graphql",
-          Absinthe.Plug,
-          init_opts: [schema: StarwebbieWeb.Schema]
+  forward "/graphql", Absinthe.Plug, schema: StarwebbieWeb.Schema
 
   forward "/graphiql",
           Absinthe.Plug.GraphiQL,
           schema: StarwebbieWeb.Schema,
-          interface: :simple
+          interface: :playground
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:starwebbie, :dev_routes) do

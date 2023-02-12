@@ -46,5 +46,6 @@ defmodule StarwebbieWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
+  plug CORSPlug
   plug StarwebbieWeb.Router
 end
