@@ -37,6 +37,7 @@ defmodule Starwebbie.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:cors_plug, "~> 3.0"},
       {:argon2_elixir, "~> 3.0"},
+      {:guardian, "~> 2.0"},
       {:absinthe_error_payload, "~> 1.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.7.2"},

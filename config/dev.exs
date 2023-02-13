@@ -26,6 +26,10 @@ config :starwebbie, StarwebbieWeb.Endpoint,
   secret_key_base: "DFS/IOUknx7r2bTk/d6Y25tk8ZC5xDHxFQTuRo0wLG9cDhc3SgV+Fqgl0zJchPpo",
   watchers: []
 
+config :starwebbie, StarwebbieWeb.Guardian,
+  issuer: "starwebbie",
+  secret_key: "IMKpu9xUkDJEYZyKLYxmBLF6WdFXJFmN3BcTuDktIbrdBoPchXc/DKBnVCOISWbr"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

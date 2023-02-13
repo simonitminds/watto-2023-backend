@@ -8,4 +8,9 @@ defmodule StarwebbieWeb.Models do
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
   end
+
+  object :user_auth do
+    field :token, :string
+    field :user, :user
+  end
 end
