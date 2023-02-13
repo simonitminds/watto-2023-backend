@@ -3,10 +3,13 @@ defmodule StarwebbieWeb.Schema do
   import AbsintheErrorPayload.Payload
 
   import_types(StarwebbieWeb.Models)
+  import_types(StarwebbieWeb.Contexts.User)
   import_types(Absinthe.Type.Custom)
   import_types(AbsintheErrorPayload.ValidationMessageTypes)
 
   query do
+    import_fields(:user_queries)
+
     field :hello, :string do
       arg(:name, :string)
 
@@ -16,27 +19,7 @@ defmodule StarwebbieWeb.Schema do
     end
   end
 
-  payload_object(:signup_payload, :user_auth)
-
   mutation do
-    field :signup, :signup_payload do
-      arg(:username, :string)
-      arg(:password, :string)
-
-      resolve(fn _parent, %{username: username, password: password}, %{context: ctx} ->
-        dbg(ctx)
-
-        case Starwebbie.Users.create_users(%{username: username, password: password}) do
-          {:ok, user} ->
-            {:ok, token, _claims} = StarwebbieWeb.Guardian.encode_and_sign(user)
-            {:ok, %{user: user, token: token}}
-
-          {:error, changeset} ->
-            {:error, changeset}
-        end
-      end)
-
-      middleware(&build_payload/2)
-    end
+    import_fields(:user_mutations)
   end
 end

@@ -2,13 +2,11 @@ defmodule StarwebbieWeb.Context do
   @behaviour Plug
 
   import Plug.Conn
-  import Ecto.Query, only: [where: 2]
-
-  alias Starwebbie.{Repo, User}
 
   def init(opts), do: opts
 
   def call(conn, _) do
+    dbg()
     context = build_context(conn)
     Absinthe.Plug.put_options(conn, context: context)
   end
