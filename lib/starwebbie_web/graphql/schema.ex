@@ -23,7 +23,9 @@ defmodule StarwebbieWeb.Schema do
       arg(:username, :string)
       arg(:password, :string)
 
-      resolve(fn %{username: username, password: password}, _ ->
+      resolve(fn _parent, %{username: username, password: password}, %{context: ctx} ->
+        dbg(ctx)
+
         case Starwebbie.Users.create_users(%{username: username, password: password}) do
           {:ok, user} ->
             {:ok, token, _claims} = StarwebbieWeb.Guardian.encode_and_sign(user)

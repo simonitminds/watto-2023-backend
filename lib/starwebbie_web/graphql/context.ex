@@ -18,7 +18,7 @@ defmodule StarwebbieWeb.Context do
   """
   def build_context(conn) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
-         {:ok, current_user} <- authorize(token) do
+         {:ok, current_user, _} <- authorize(token) do
       %{current_user: current_user}
     else
       _ -> %{}
@@ -26,6 +26,6 @@ defmodule StarwebbieWeb.Context do
   end
 
   defp authorize(token) do
-    StarwebbieWeb.Guardian.decode_and_verify(token)
+    StarwebbieWeb.Guardian.resource_from_token(token)
   end
 end
