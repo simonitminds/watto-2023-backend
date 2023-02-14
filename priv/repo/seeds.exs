@@ -17,7 +17,7 @@ type_names = ~w[crystal_vibrator hilt crystal power_core]
 model_names = ~w[gilded golden royal regal silvered enchanted embossed]
 
 rand_number_f = fn -> :rand.uniform() end
-rand_number_i = fn -> :rand.uniform() |> trunc() end
+rand_number_i = fn -> (:rand.uniform() * 100) |> trunc() end
 
 types =
   type_names

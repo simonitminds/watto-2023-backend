@@ -210,7 +210,7 @@ defmodule Starwebbie.Items do
 
   """
   def list_items do
-    Repo.all(Item)
+    Repo.all(Item) |> Repo.preload([:model, :type])
   end
 
   @doc """
@@ -227,7 +227,7 @@ defmodule Starwebbie.Items do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item(id), do: Repo.get(Item, id)
 
   @doc """
   Creates a item.
