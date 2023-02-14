@@ -213,6 +213,11 @@ defmodule Starwebbie.Items do
     Repo.all(Item) |> Repo.preload([:model, :type])
   end
 
+  def list_items_by_type_id(type_id) do
+    query = from(i in Item, where: i.type_id == ^type_id)
+    Repo.all(query) |> Repo.preload([:model, :type])
+  end
+
   @doc """
   Gets a single item.
 
@@ -227,7 +232,7 @@ defmodule Starwebbie.Items do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item(id), do: Repo.get(Item, id)
+  def get_item(id), do: Repo.get(Item, id) |> Repo.preload([:model, :type])
 
   @doc """
   Creates a item.

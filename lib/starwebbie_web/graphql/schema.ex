@@ -15,6 +15,7 @@ defmodule StarwebbieWeb.Schema do
 
   mutation do
     import_fields(:user_mutations)
+    import_fields(:item_mutations)
     import_fields(:auth_mutations)
   end
 end
