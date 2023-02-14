@@ -6,6 +6,7 @@ defmodule Starwebbie.Users.User do
     field :name, :string
     field :password, :string
     field :username, :string
+    has_many :items, Starwebbie.Items.Item, foreign_key: :owner_id
 
     timestamps()
   end

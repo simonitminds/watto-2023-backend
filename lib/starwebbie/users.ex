@@ -55,14 +55,20 @@ defmodule Starwebbie.Users do
     |> Repo.insert()
   end
 
-  def check_auth(username, password) do
+  def authenticate_username(username, password) do
     user =
       from(u in User, where: u.username == ^username)
       |> Repo.one()
 
-    case Argon2.verify_pass(password, user.password) do
-      true -> user
-      false -> nil
+    verify_password(user, password)
+  end
+
+  def verify_password(nil, _hash), do: {:error, "User not found"}
+
+  def verify_password(user, password_to_check) do
+    case Argon2.verify_pass(password_to_check, user.password) do
+      true -> {:ok, user}
+      false -> {:error, "Invalid password"}
     end
   end
 
