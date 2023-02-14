@@ -6,7 +6,6 @@ defmodule StarwebbieWeb.Context do
   def init(opts), do: opts
 
   def call(conn, _) do
-    dbg()
     context = build_context(conn)
     Absinthe.Plug.put_options(conn, context: context)
   end

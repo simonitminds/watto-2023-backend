@@ -35,7 +35,7 @@ defmodule Starwebbie.Items do
       ** (Ecto.NoResultsError)
 
   """
-  def get_model!(id), do: Repo.get!(Model, id)
+  def get_model(id), do: Repo.get(Model, id)
 
   @doc """
   Creates a model.
@@ -131,7 +131,7 @@ defmodule Starwebbie.Items do
       ** (Ecto.NoResultsError)
 
   """
-  def get_type!(id), do: Repo.get!(Type, id)
+  def get_type(id), do: Repo.get(Type, id)
 
   @doc """
   Creates a type.

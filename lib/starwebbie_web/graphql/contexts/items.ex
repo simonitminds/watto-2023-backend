@@ -8,17 +8,17 @@ defmodule StarwebbieWeb.Contexts.Items do
 
     field :type, :type do
       resolve(fn item, _args, _context ->
-        {:ok, Starwebbie.Items.get_type!(item.type_id)}
+        {:ok, Starwebbie.Items.get_type(item.type_id)}
       end)
     end
 
     field :model, :model do
       resolve(fn item, _args, _context ->
-        {:ok, Starwebbie.Items.get_model!(item.model_id)}
+        {:ok, Starwebbie.Items.get_model(item.model_id)}
       end)
     end
 
-    field :price, :float do
+    field :price, non_null(:float) do
       resolve(&price/3)
     end
 
@@ -27,30 +27,36 @@ defmodule StarwebbieWeb.Contexts.Items do
   end
 
   object :item_queries do
-    field :item_list, list_of(:item) do
+    field :item_list, list_of(non_null(:item)) do
+      middleware(StarwebbieWeb.Authentication)
       resolve(&items/3)
     end
 
     field :item_get, :item do
       arg(:id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&item/3)
     end
 
-    field :model_list, list_of(:model) do
+    field :model_list, list_of(non_null(:model)) do
+      middleware(StarwebbieWeb.Authentication)
       resolve(&models/3)
     end
 
     field :model_get, :model do
       arg(:id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&model/3)
     end
 
-    field :type_list, list_of(:type) do
+    field :type_list, list_of(non_null(:type)) do
+      middleware(StarwebbieWeb.Authentication)
       resolve(&types/3)
     end
 
     field :type_get, :type do
       arg(:id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&type/3)
     end
   end
@@ -65,6 +71,7 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:type_id, non_null(:id))
       arg(:owner_id, non_null(:id))
       arg(:model_id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&create_item/3)
       middleware(&build_payload/2)
     end
@@ -74,6 +81,7 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:id, non_null(:id))
       arg(:type_id, non_null(:id))
       arg(:model_id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&update_item/3)
       middleware(&build_payload/2)
     end
@@ -81,6 +89,7 @@ defmodule StarwebbieWeb.Contexts.Items do
     field :model_create, :model_payload do
       arg(:name, non_null(:string))
       arg(:multiplier, non_null(:integer))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&create_model/3)
       middleware(&build_payload/2)
     end
@@ -90,6 +99,7 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:name, non_null(:string))
       arg(:multiplier, non_null(:integer))
 
+      middleware(StarwebbieWeb.Authentication)
       resolve(&update_model/3)
       middleware(&build_payload/2)
     end
@@ -97,6 +107,7 @@ defmodule StarwebbieWeb.Contexts.Items do
     field :type_create, :type_payload do
       arg(:name, non_null(:string))
       arg(:index_price, non_null(:integer))
+      middleware(StarwebbieWeb.Authentication)
       resolve(&create_type/3)
       middleware(&build_payload/2)
     end
@@ -105,6 +116,7 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:id, non_null(:id))
       arg(:name, non_null(:string))
       arg(:index_price, non_null(:integer))
+      middleware(StarwebbieWeb.Authentication)
 
       resolve(&update_type/3)
       middleware(&build_payload/2)
@@ -128,7 +140,7 @@ defmodule StarwebbieWeb.Contexts.Items do
   end
 
   def update_type(_, args, _) do
-    type = Starwebbie.Items.get_type!(args.id)
+    type = Starwebbie.Items.get_type(args.id)
 
     case type do
       nil ->
@@ -144,7 +156,7 @@ defmodule StarwebbieWeb.Contexts.Items do
   end
 
   def update_model(_, args, _) do
-    model = Starwebbie.Items.get_model!(args.id)
+    model = Starwebbie.Items.get_model(args.id)
 
     case model do
       nil ->
@@ -175,7 +187,7 @@ defmodule StarwebbieWeb.Contexts.Items do
   end
 
   def model(_, args, _) do
-    case Starwebbie.Items.get_model!(args.id) do
+    case Starwebbie.Items.get_model(args.id) do
       nil -> {:error, "model not found"}
       model -> {:ok, model}
     end
@@ -186,7 +198,7 @@ defmodule StarwebbieWeb.Contexts.Items do
   end
 
   def type(_, args, _) do
-    case Starwebbie.Items.get_type!(args.id) do
+    case Starwebbie.Items.get_type(args.id) do
       nil -> {:error, "Item not found"}
       type -> {:ok, type}
     end

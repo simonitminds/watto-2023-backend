@@ -8,6 +8,11 @@ defmodule StarwebbieWeb.Contexts.User do
       middleware(StarwebbieWeb.Authentication)
       resolve(&list_users/3)
     end
+
+    field :me, :user do
+      middleware(StarwebbieWeb.Authentication)
+      resolve(&me/3)
+    end
   end
 
   payload_object(:update_user_payload, :user)
@@ -23,6 +28,10 @@ defmodule StarwebbieWeb.Contexts.User do
       resolve(&update_user/3)
       middleware(&build_payload/2)
     end
+  end
+
+  defp me(_parent, _args, %{context: %{current_user: current_user}} = _ctx) do
+    {:ok, current_user}
   end
 
   defp list_users(_parent, _args, _ctx) do

@@ -1,18 +1,18 @@
 defmodule StarwebbieWeb.Models do
   use Absinthe.Schema.Notation
-  import AbsintheErrorPayload.Payload
 
   object :user do
     field :id, non_null(:id)
     field :name, :string
-    field :username, :string
+    field :username, non_null(:string)
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
   end
 
   object :type do
     field :id, non_null(:id)
-    field :name, :string
+    field :name, non_null(:string)
+    field :multiplier, non_null(:float)
 
     field :items, list_of(:item) do
       resolve(fn type, _args, _context ->
@@ -26,7 +26,8 @@ defmodule StarwebbieWeb.Models do
 
   object :model do
     field :id, non_null(:id)
-    field :name, :string
+    field :name, non_null(:string)
+    field :index_price, non_null(:integer)
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
   end
