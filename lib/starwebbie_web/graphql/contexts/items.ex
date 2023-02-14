@@ -37,7 +37,6 @@ defmodule StarwebbieWeb.Contexts.Items do
     end
 
     def price(item, _args, _context) do
-      dbg(item)
       {:ok, item.model.index_price * item.type.multiplier}
     end
   end
