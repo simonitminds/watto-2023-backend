@@ -151,7 +151,7 @@ defmodule StarwebbieWeb.Contexts.Items do
   def buy_item(_, args, %{context: %{current_user: current_user}}) do
     case Starwebbie.Items.buy_item(args.item_id, current_user.id) do
       {:ok, data} -> {:ok, Map.get(data, :update_item)}
-      {:error, error} -> {:error, error}
+      e -> {:error, elem(e, 2)}
     end
   end
 
