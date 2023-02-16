@@ -298,4 +298,32 @@ defmodule Starwebbie.Items do
   def change_item(%Item{} = item, attrs \\ %{}) do
     Item.changeset(item, attrs)
   end
+
+  def buy_item(item_id, user_id) do
+    with item when not is_nil(item) <- get_item(item_id),
+         user <- Starwebbie.Users.get_users!(user_id),
+         original_owner <- Starwebbie.Users.get_users!(item.owner_id),
+         price <- item.type.multiplier * item.model.index_price do
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:check_balance, fn _repo, _changes ->
+        case user.balance >= price do
+          true -> {:ok, :ok}
+          false -> {:error, :insufficient_balance}
+        end
+      end)
+      |> Ecto.Multi.update(
+        :update_buyer,
+        Starwebbie.Users.change_users(user, %{balance: user.balance - price})
+      )
+      |> Ecto.Multi.update(
+        :update_seller,
+        Starwebbie.Users.change_users(original_owner, %{balance: user.balance + price})
+      )
+      |> Ecto.Multi.update(
+        :update_item,
+        change_item(item, %{owner_id: user.id})
+      )
+      |> Repo.transaction()
+    end
+  end
 end

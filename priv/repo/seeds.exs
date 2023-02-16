@@ -36,7 +36,8 @@ models =
 {:ok, user} =
   Users.create_users(%{
     username: "dark_saber_dealer",
-    password: "notwatto"
+    password: "notwatto",
+    balance: 10000.0
   })
 
 items =

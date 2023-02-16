@@ -22,6 +22,12 @@ defmodule StarwebbieWeb.Contexts.Items do
       resolve(&price/3)
     end
 
+    field :owner, :user do
+      resolve(fn item, _args, _context ->
+        {:ok, Starwebbie.Users.get_users!(item.owner_id)}
+      end)
+    end
+
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
   end
@@ -73,6 +79,13 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:model_id, non_null(:id))
       middleware(StarwebbieWeb.Authentication)
       resolve(&create_item/3)
+      middleware(&build_payload/2)
+    end
+
+    field :buy_item, :item_payload do
+      arg(:item_id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
+      resolve(&buy_item/3)
       middleware(&build_payload/2)
     end
 
@@ -132,6 +145,13 @@ defmodule StarwebbieWeb.Contexts.Items do
 
       item ->
         Starwebbie.Items.update_item(item, args)
+    end
+  end
+
+  def buy_item(_, args, %{context: %{current_user: current_user}}) do
+    case Starwebbie.Items.buy_item(args.item_id, current_user.id) do
+      {:ok, data} -> {:ok, Map.get(data, :update_item)}
+      {:error, error} -> {:error, error}
     end
   end
 

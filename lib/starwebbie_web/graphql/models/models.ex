@@ -5,6 +5,7 @@ defmodule StarwebbieWeb.Models do
     field :id, non_null(:id)
     field :name, :string
     field :username, non_null(:string)
+    field :balance, non_null(:float)
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
   end

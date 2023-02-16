@@ -6,6 +6,7 @@ defmodule Starwebbie.Repo.Migrations.CreateUsers do
       add :name, :string
       add :username, :string
       add :password, :string
+      add :balance, :float
 
       timestamps()
     end

@@ -6,6 +6,7 @@ defmodule Starwebbie.Users.User do
     field :name, :string
     field :password, :string
     field :username, :string
+    field :balance, :float, default: 100.0
     has_many :items, Starwebbie.Items.Item, foreign_key: :owner_id
 
     timestamps()
@@ -14,7 +15,7 @@ defmodule Starwebbie.Users.User do
   @doc false
   def changeset(users, attrs) do
     users
-    |> cast(attrs, [:name, :username, :password])
+    |> cast(attrs, [:name, :username, :password, :balance])
     |> unique_constraint(:username)
     |> put_pass_hash()
     |> validate_required([:username, :password])
