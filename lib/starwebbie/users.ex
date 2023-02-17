@@ -35,6 +35,7 @@ defmodule Starwebbie.Users do
       ** (Ecto.NoResultsError)
 
   """
+  def get_users!(username) when is_binary(username), do: Repo.get_by(User, username: username)
   def get_users!(id), do: Repo.get!(User, id)
 
   @doc """

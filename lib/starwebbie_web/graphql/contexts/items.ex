@@ -38,6 +38,12 @@ defmodule StarwebbieWeb.Contexts.Items do
       resolve(&items/3)
     end
 
+    field :item_list_by_user_id, list_of(non_null(:item)) do
+      arg(:user_id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
+      resolve(&items/3)
+    end
+
     field :item_get, :item do
       arg(:id, non_null(:id))
       middleware(StarwebbieWeb.Authentication)
@@ -86,6 +92,13 @@ defmodule StarwebbieWeb.Contexts.Items do
       arg(:item_id, non_null(:id))
       middleware(StarwebbieWeb.Authentication)
       resolve(&buy_item/3)
+      middleware(&build_payload/2)
+    end
+
+    field :sell_item, :item_payload do
+      arg(:item_id, non_null(:id))
+      middleware(StarwebbieWeb.Authentication)
+      resolve(&sell_item/3)
       middleware(&build_payload/2)
     end
 
@@ -155,6 +168,15 @@ defmodule StarwebbieWeb.Contexts.Items do
     end
   end
 
+  def sell_item(_, args, %{context: %{current_user: current_user}}) do
+    webshob_owner = Starwebbie.Users.get_users!("dark_saber_dealer")
+
+    case Starwebbie.Items.trade_item(args.item_id, current_user.id, webshob_owner.id) do
+      {:ok, data} -> {:ok, Map.get(data, :update_item)}
+      e -> {:error, elem(e, 2)}
+    end
+  end
+
   def create_item(_, args, _) do
     Starwebbie.Items.create_item(args)
   end
@@ -189,6 +211,10 @@ defmodule StarwebbieWeb.Contexts.Items do
 
   def create_model(_, args, _) do
     Starwebbie.Items.create_model(args)
+  end
+
+  def items(_parent, %{user_id: user_id}, _context) do
+    {:ok, Starwebbie.Items.list_items(user_id: user_id)}
   end
 
   def items(_parent, _args, _context) do

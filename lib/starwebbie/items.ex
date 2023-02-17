@@ -213,6 +213,14 @@ defmodule Starwebbie.Items do
     Repo.all(Item) |> Repo.preload([:model, :type])
   end
 
+  def list_items(user_id: user_id) do
+    from(i in Item,
+      where: i.owner_id == ^user_id,
+      preload: [:model, :type]
+    )
+    |> Repo.all()
+  end
+
   def list_items_by_type_id(type_id) do
     query = from(i in Item, where: i.type_id == ^type_id)
     Repo.all(query) |> Repo.preload([:model, :type])
@@ -322,6 +330,40 @@ defmodule Starwebbie.Items do
       |> Ecto.Multi.update(
         :update_item,
         change_item(item, %{owner_id: user.id})
+      )
+      |> Repo.transaction()
+    end
+  end
+
+  @doc """
+  Trades an item with another user.
+  """
+  @spec trade_item(item_id :: integer, seller_id :: integer, buyer_id :: integer) ::
+          any()
+  def trade_item(item_id, seller_id, buyer_id) do
+    with item when not is_nil(item) <- get_item(item_id),
+         buyer <- Starwebbie.Users.get_users!(buyer_id),
+         seller <- Starwebbie.Users.get_users!(seller_id),
+         true <- item.owner_id == seller.id,
+         price <- item.type.multiplier * item.model.index_price do
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:check_balance, fn _repo, _changes ->
+        case buyer.balance >= price do
+          true -> {:ok, :ok}
+          false -> {:error, :insufficient_balance}
+        end
+      end)
+      |> Ecto.Multi.update(
+        :update_buyer,
+        Starwebbie.Users.change_users(buyer, %{balance: buyer.balance - price})
+      )
+      |> Ecto.Multi.update(
+        :update_seller,
+        Starwebbie.Users.change_users(seller, %{balance: seller.balance + price})
+      )
+      |> Ecto.Multi.update(
+        :update_item,
+        change_item(item, %{owner_id: buyer.id})
       )
       |> Repo.transaction()
     end
