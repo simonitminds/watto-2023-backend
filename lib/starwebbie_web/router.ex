@@ -24,7 +24,7 @@ defmodule StarwebbieWeb.Router do
             Absinthe.Plug.GraphiQL,
             schema: StarwebbieWeb.Schema,
             socket: StarwebbieWeb.UserSocket,
-            interface: :simple
+            interface: :playground
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

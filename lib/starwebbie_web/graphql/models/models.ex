@@ -1,5 +1,7 @@
 defmodule StarwebbieWeb.Models do
+  alias Starwebbie.Items
   use Absinthe.Schema.Notation
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   object :user do
     field :id, non_null(:id)
@@ -15,10 +17,8 @@ defmodule StarwebbieWeb.Models do
     field :name, non_null(:string)
     field :multiplier, non_null(:float)
 
-    field :items, list_of(:item) do
-      resolve(fn type, _args, _context ->
-        {:ok, Starwebbie.Items.list_items_by_type_id(type.id)}
-      end)
+    field :items, list_of(non_null(:item)) do
+      resolve(dataloader(Items))
     end
 
     field :inserted_at, :naive_datetime

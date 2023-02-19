@@ -28,9 +28,15 @@ defmodule Starwebbie.PriceService do
   end
 
   def broadcast() do
-    user_id = 1
+    Starwebbie.Users.list_users() |> Enum.each(fn user -> broadcast_user(user.id) end)
+  end
+
+  def broadcast_user(user_id) do
     items = Starwebbie.Items.list_items(user_id: user_id)
-    Absinthe.Subscription.publish(StarwebbieWeb.Endpoint, items, marketplace: "*")
+
+    Absinthe.Subscription.publish(StarwebbieWeb.Endpoint, items,
+      marketplace: "marketplace:#{user_id}"
+    )
   end
 
   def subscribe() do

@@ -1,21 +1,18 @@
 defmodule StarwebbieWeb.Contexts.Items do
   use Absinthe.Schema.Notation
   import AbsintheErrorPayload.Payload
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   object :item do
     field :id, non_null(:id)
     field :name, :string
 
     field :type, :type do
-      resolve(fn item, _args, _context ->
-        {:ok, Starwebbie.Items.get_type(item.type_id)}
-      end)
+      resolve(dataloader(Starwebbie.Items))
     end
 
     field :model, :model do
-      resolve(fn item, _args, _context ->
-        {:ok, Starwebbie.Items.get_model(item.model_id)}
-      end)
+      resolve(dataloader(Starwebbie.Items))
     end
 
     field :price, non_null(:float) do
@@ -23,9 +20,7 @@ defmodule StarwebbieWeb.Contexts.Items do
     end
 
     field :owner, :user do
-      resolve(fn item, _args, _context ->
-        {:ok, Starwebbie.Users.get_users!(item.owner_id)}
-      end)
+      resolve(dataloader(Starwebbie.Users))
     end
 
     field :inserted_at, :naive_datetime

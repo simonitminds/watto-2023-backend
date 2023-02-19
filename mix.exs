@@ -47,6 +47,7 @@ defmodule Starwebbie.MixProject do
       {:finch, "~> 0.13"},
       {:absinthe, "~> 1.7"},
       {:absinthe_plug, "~> 1.5"},
+      {:dataloader, "~> 1.0.0"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
