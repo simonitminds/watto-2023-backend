@@ -18,4 +18,12 @@ defmodule StarwebbieWeb.Schema do
     import_fields(:item_mutations)
     import_fields(:auth_mutations)
   end
+
+  subscription do
+    field :marketplace, list_of(non_null(:item)) do
+      config(fn args, info ->
+        {:ok, topic: "*"}
+      end)
+    end
+  end
 end

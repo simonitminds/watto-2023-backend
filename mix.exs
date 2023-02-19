@@ -34,6 +34,8 @@ defmodule Starwebbie.MixProject do
     [
       {:phoenix, "~> 1.7.0-rc.2", override: true},
       {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:absinthe_phoenix, "~> 2.0"},
       {:ecto_sql, "~> 3.6"},
       {:cors_plug, "~> 3.0"},
       {:argon2_elixir, "~> 3.0"},

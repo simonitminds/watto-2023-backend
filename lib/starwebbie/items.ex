@@ -210,7 +210,7 @@ defmodule Starwebbie.Items do
 
   """
   def list_items do
-    Repo.all(Item) |> Repo.preload([:model, :type])
+    Repo.all(Item) |> Repo.preload([:model, :type, :owner])
   end
 
   def list_items(user_id: user_id) do

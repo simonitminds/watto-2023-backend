@@ -17,7 +17,9 @@ defmodule Starwebbie.Application do
       # Start Finch
       {Finch, name: Starwebbie.Finch},
       # Start the Endpoint (http/https)
-      StarwebbieWeb.Endpoint
+      StarwebbieWeb.Endpoint,
+      Starwebbie.PriceService,
+      {Absinthe.Subscription, pubsub: StarwebbieWeb.Endpoint}
       # Start a worker by calling: Starwebbie.Worker.start_link(arg)
       # {Starwebbie.Worker, arg}
     ]

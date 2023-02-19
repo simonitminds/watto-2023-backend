@@ -16,12 +16,15 @@ defmodule StarwebbieWeb.Router do
   scope "/" do
     pipe_through :graphql
 
-    forward "/graphql", Absinthe.Plug, schema: StarwebbieWeb.Schema
+    forward "/graphql", Absinthe.Plug,
+      schema: StarwebbieWeb.Schema,
+      socket: StarwebbieWeb.UserSocket
 
     forward "/graphiql",
             Absinthe.Plug.GraphiQL,
             schema: StarwebbieWeb.Schema,
-            interface: :playground
+            socket: StarwebbieWeb.UserSocket,
+            interface: :simple
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
