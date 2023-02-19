@@ -28,6 +28,11 @@ defmodule StarwebbieWeb.Models do
   object :model do
     field :id, non_null(:id)
     field :name, non_null(:string)
+
+    field :items, list_of(non_null(:item)) do
+      resolve(dataloader(Items))
+    end
+
     field :index_price, non_null(:integer)
     field :inserted_at, :naive_datetime
     field :updated_at, :naive_datetime
